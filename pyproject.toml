@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bookly-agent"
+version = "0.1.0"
+description = "Customer support agent for Bookly with explicit orchestration"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "Flask>=3.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+bookly-agent = "bookly_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bookly_agent*"]
+
+[tool.setuptools.package-data]
+bookly_agent = ["data/*.json"]
+"bookly_agent.server" = ["widget/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

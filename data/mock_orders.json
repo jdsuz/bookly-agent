@@ -1,0 +1,85 @@
+{
+  "orders": [
+    {
+      "order_id": "ORD-1042",
+      "customer_email": "jane@example.com",
+      "status": "delivered",
+      "items": [
+        {
+          "title": "The Great Gatsby",
+          "price": 24.99
+        }
+      ],
+      "total": 24.99,
+      "delivered_at": "2026-06-01",
+      "refund_eligible": true,
+      "refund_status": null
+    },
+    {
+      "order_id": "ORD-2088",
+      "customer_email": "alex@example.com",
+      "status": "in_transit",
+      "items": [
+        {
+          "title": "Dune",
+          "price": 18.50
+        }
+      ],
+      "total": 18.50,
+      "shipped_at": "2026-06-08",
+      "estimated_delivery": "2026-06-14",
+      "refund_eligible": false,
+      "refund_status": null
+    },
+    {
+      "order_id": "ORD-3011",
+      "customer_email": "sam@example.com",
+      "status": "delivered",
+      "items": [
+        {
+          "title": "Pride and Prejudice",
+          "price": 14.99
+        }
+      ],
+      "total": 14.99,
+      "delivered_at": "2026-05-20",
+      "refund_eligible": false,
+      "refund_status": "completed",
+      "refund_id": "REF-550"
+    },
+    {
+      "order_id": "ORD-4150",
+      "customer_email": "jane@example.com",
+      "status": "processing",
+      "items": [
+        {
+          "title": "1984",
+          "price": 16.00
+        }
+      ],
+      "total": 16.00,
+      "refund_eligible": false,
+      "refund_status": null
+    },
+    {
+      "order_id": "ORD-5223",
+      "customer_email": "morgan@example.com",
+      "status": "delivered",
+      "items": [
+        {
+          "title": "The Hobbit",
+          "price": 22.00
+        },
+        {
+          "title": "The Fellowship of the Ring",
+          "price": 22.00
+        }
+      ],
+      "total": 44.00,
+      "delivered_at": "2026-05-28",
+      "refund_eligible": true,
+      "refund_status": null
+    }
+  ],
+  "refunds": []
+}
