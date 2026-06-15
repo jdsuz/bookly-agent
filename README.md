@@ -5,9 +5,7 @@ A customer support agent for **Bookly**, a fictional online bookstore. It handle
 ## How to Use
 
 1. Navigate to [getlitly.com](https://getlitly.com)
-2. Create an account or use the test login:
-   - Email: `REDACTED`
-   - Password: `REDACTED`
+2. Create an account or use test login (provided separately)
 3. Try the CX Agent
 
 **Test flows:**
