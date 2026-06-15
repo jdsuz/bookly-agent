@@ -1,8 +1,20 @@
 # Bookly Support Agent
 
-A customer support agent for **Bookly**, a fictional online bookstore. Built for the Decagon Solutions Engineer take-home: demonstrate direct API orchestration (not an all-in-one agent platform) and articulate the architecture behind it.
+A customer support agent for **Bookly**, a fictional online bookstore. It handles order status, refunds/returns, and general FAQ (shipping, policies, password reset), and ships as an installable Python package with a CLI demo, Flask API, and embeddable chat widget.
 
-The agent handles order status, refunds/returns, and general FAQ (shipping, policies, password reset). It ships as an installable Python package with a CLI demo, Flask API, and embeddable chat widget.
+## How to Use
+
+1. Navigate to [getlitly.com](https://getlitly.com)
+2. Create an account or use the test login:
+   - Email: `jdsouza0325+testuser1@gmail.com`
+   - Password: `password123`
+3. Try the CX Agent
+
+**Test flows:**
+
+- When will I receive my book? (ORD-1042)
+- My book is damaged
+- How do I reset my password?
 
 ## Thesis
 
@@ -123,8 +135,8 @@ Swap `BOOKLY_AGENT_DATA_PATH` or replace tool implementations to connect to real
 | Decision | Choice | Why |
 |----------|--------|-----|
 | LLM | Gemini 2.5 Flash | Structured JSON output, existing API setup, sufficient for 3–4 tool flows |
-| Orchestration | Hand-rolled Python | Decagon wants visible architecture, not framework magic |
-| State | In-memory sessions | Fine for demo; README documents Redis/SQLite upgrade path |
+| Orchestration | Hand-rolled Python | For visible architecture |
+| State | In-memory sessions | Fine for demo; Redis/SQLite upgrade path |
 | Tools | Mock JSON store | Safe, traceable, no external dependencies for evaluators |
 | API key | Backend-proxied | Widget never sees `GEMINI_API_KEY` |
 | Agent framework | None | Direct `urllib` to Gemini REST API |
@@ -187,6 +199,3 @@ bookly-agent/
 └── README.md
 ```
 
-## License
-
-MIT (or your choice) — take-home demonstration project.

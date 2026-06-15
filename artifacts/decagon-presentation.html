@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookly Support Agent: Solution Pitch</title>
+  <style>
+    :root {
+      --bg: #fafaf9;
+      --surface: #ffffff;
+      --text: #1c1917;
+      --text-muted: #57534e;
+      --accent: #4f46e5;
+      --accent-soft: #eef2ff;
+      --border: #e7e5e4;
+      --success: #059669;
+      --warning: #d97706;
+      --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: "SF Mono", "Fira Code", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .deck {
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 4.75rem 4.5rem 5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(24px);
+      transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    .slide-header {
+      margin-bottom: 2rem;
+    }
+
+    .slide-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      max-width: 52rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      max-width: 48rem;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      max-width: 42rem;
+      line-height: 1.5;
+    }
+
+    .thesis-quote {
+      font-size: 1.65rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text);
+      border-left: 4px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0 2rem;
+      max-width: 44rem;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      flex: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card p, .card li {
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card li::before {
+      content: "→";
+      color: var(--accent);
+      margin-right: 0.5rem;
+      font-weight: 600;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .flow-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      flex: 1;
+    }
+
+    .flow-diagram .step { color: var(--text-muted); }
+    .flow-diagram .component { color: var(--accent); font-weight: 600; }
+    .flow-diagram .action { color: var(--text); }
+    .flow-diagram .highlight { color: var(--success); font-weight: 600; }
+
+    .decision-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .decision-card .choice {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tradeoff {
+      font-size: 0.85rem;
+      padding: 0.65rem 0.85rem;
+      background: #fffbeb;
+      border-radius: 6px;
+      color: #92400e;
+      line-height: 1.45;
+    }
+
+    .tradeoff strong { font-weight: 600; }
+
+    .why {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .why strong { color: var(--success); }
+
+    .priority-box {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 52rem;
+    }
+
+    .priority-box h3 {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .priority-box p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .priority-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .priority-box li {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .priority-box li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(250, 250, 249, 0.92);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .progress {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.25);
+    }
+
+    .nav-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-family: var(--font);
+      cursor: pointer;
+      color: var(--text);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .deck-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .deck-logo {
+      height: 1.5rem;
+      width: auto;
+      display: block;
+    }
+
+    .deck-author {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+
+    @media (max-width: 900px) {
+      .slide { padding: 2rem 1.5rem 5rem; }
+      h1 { font-size: 2rem; }
+      h2 { font-size: 1.5rem; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="deck-header">
+    <img class="deck-logo" src="decagon-logo.png" alt="Decagon" />
+    <span class="deck-author">Josh D'Souza</span>
+  </header>
+
+  <div class="deck" id="deck">
+
+    <!-- Slide 1: Title -->
+    <section class="slide active" data-slide="0">
+      <div class="slide-header">
+        <div class="slide-label">Solution Pitch</div>
+        <h1>Bookly Support Agent</h1>
+        <p class="subtitle">
+          The LLM handles language. Python owns when money moves.
+        </p>
+      </div>
+      <div class="content">
+        <p class="thesis-quote">
+          Great CX agents go beyond traditional chatbots built on rigid decision trees. They understand intent, follow policy, stick to the facts, and act on the user's behalf.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h3><span class="tag">Scope</span></h3>
+            <p>Order status, refunds, and general FAQ for a fictional online bookstore. Ships as a CLI, Flask API, and embeddable widget.</p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Stack</span></h3>
+            <p>Gemini 2.5 Flash via direct REST. No LangChain, no agent platform. Every layer is inspectable Python.</p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Argument</span></h3>
+            <p>I kept the orchestration explicit instead of giving the LLM open-ended function calling.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Thesis -->
+    <section class="slide" data-slide="1">
+      <div class="slide-header">
+        <div class="slide-label">Thesis</div>
+        <h2>The LLM understands language.<br>Python owns business logic and side effects.</h2>
+      </div>
+      <div class="content grid-2">
+        <div>
+          <p class="thesis-quote" style="font-size: 1.2rem; margin-top: 0;">
+            The model should never decide when to issue a refund. It phrases the outcome; Python decides whether the refund runs.
+          </p>
+          <div class="card" style="margin-top: 1rem;">
+            <h3>What that looks like</h3>
+            <ul>
+              <li><strong>Router:</strong> one structured LLM call for intent classification and entity extraction</li>
+              <li><strong>Flows:</strong> dialogue state tracking via deterministic state machines</li>
+              <li><strong>Tools:</strong> plain Python functions; the model never sees a tool schema</li>
+              <li><strong>Policies:</strong> confidence thresholds, validation, confirmation gates</li>
+              <li><strong>Response gen:</strong> LLM paraphrases tool results; it does not invent facts</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Why not a ReAct loop</h3>
+          <p style="margin-bottom: 1rem;">A ReAct loop lets the model chain function calls on its own. That works for exploration, but it's risky for side effects like refunds.</p>
+          <p style="margin-bottom: 1rem;">This agent uses two LLM calls per topic: one to route, one to phrase the reply. Everything in between is plain Python you can unit test.</p>
+          <p>14 pytest cases run against a mock LLM and cover the orchestration paths.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Architecture -->
+    <section class="slide" data-slide="2">
+      <div class="slide-header">
+        <div class="slide-label">Architecture</div>
+        <h2>How a customer inquiry moves through the system</h2>
+      </div>
+      <div class="content grid-2">
+        <div class="flow-diagram">
+          <div><span class="component">User</span> → <span class="component">Widget</span> → <span class="component">Flask</span> <span class="step">POST /api/support/chat</span></div>
+          <div style="margin: 0.5rem 0;">↓</div>
+          <div><span class="component">Orchestrator</span> <span class="action">handle_turn(session_id, message)</span></div>
+          <div style="margin: 0.75rem 0; padding-left: 1rem; border-left: 2px solid var(--border);">
+            <div class="step">Load session from SessionStore (in-memory)</div>
+            <div class="step">Append to history (max 12 turns; 6 sent to LLM)</div>
+            <div style="margin: 0.5rem 0;">
+              <span class="highlight">If active_flow?</span> → continue flow <span class="step">(skip router)</span>
+            </div>
+            <div>
+              <span class="highlight">Else</span> → <span class="component">Router</span> → Gemini JSON schema
+              <div class="step" style="padding-left: 1rem;">confidence &lt; 0.65 or unknown → fallback intent clarification</div>
+              <div class="step" style="padding-left: 1rem;">else → start Flow state machine</div>
+            </div>
+          </div>
+          <div style="margin: 0.5rem 0;">↓</div>
+          <div><span class="component">Flow</span> <span class="action">collect slots → validate → call tools → confirm</span></div>
+          <div style="margin: 0.5rem 0;">↓</div>
+          <div><span class="component">Tools</span> <span class="action">get_order_status / initiate_refund</span> <span class="step">→ mock_orders.json</span></div>
+          <div style="margin: 0.5rem 0;">↓</div>
+          <div><span class="component">Gemini</span> <span class="action">generate_response(tool_context)</span> <span class="step">→ grounded reply</span></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="card">
+            <h3><span class="tag">Memory</span> Session state</h3>
+            <p>Session-scoped only: <code style="font-family: var(--mono); font-size: 0.85rem;">active_flow</code>, <code style="font-family: var(--mono); font-size: 0.85rem;">flow_step</code>, <code style="font-family: var(--mono); font-size: 0.85rem;">slots</code>, and turn history. No vector store. The context window is the last 6 turns.</p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Prompts</span> Two roles, two temperatures</h3>
+            <p><strong>Router</strong> (temp 0.1): classify into 4 intents, extract ORD-#### and refund reason, return confidence score. <strong>Response</strong> (temp 0.4): "Do not invent order details, refund IDs, or policies not in the context."</p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Refund flow</span></h3>
+            <p>awaiting_order_id → awaiting_reason → confirm → execute tool → respond. Side effects only after explicit "yes" and eligibility check against live order data.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Key Decisions -->
+    <section class="slide" data-slide="3">
+      <div class="slide-header">
+        <div class="slide-label">Key Decisions</div>
+        <h2>Three decisions that mattered</h2>
+      </div>
+      <div class="content grid-3">
+        <div class="card decision-card">
+          <h3><span class="tag">1</span> Orchestration</h3>
+          <p class="choice">Hand-rolled state machines over agent frameworks or open-ended function calling.</p>
+          <div class="tradeoff"><strong>Trade-off:</strong> More code per flow. Adding a new intent means writing a new state machine, not dropping in a tool definition.</div>
+          <p class="why"><strong>Why:</strong> Every refund step is auditable. You need that for compliance and for debugging production issues.</p>
+        </div>
+        <div class="card decision-card">
+          <h3><span class="tag">2</span> Intent disambiguation</h3>
+          <p class="choice">Structured JSON routing with confidence score gating at 0.65, plus regex fallback for entity extraction (ORD-####).</p>
+          <div class="tradeoff"><strong>Trade-off:</strong> Extra turn when the model is uncertain. Lower containment rate on ambiguous openers.</div>
+          <p class="why"><strong>Why:</strong> Starting the wrong flow, especially a refund, is worse than one clarifying question.</p>
+        </div>
+        <div class="card decision-card">
+          <h3><span class="tag">3</span> Hallucination prevention</h3>
+          <p class="choice">Three-layer grounding: deterministic slot collection, then tool-gated facts, then LLM paraphrase only.</p>
+          <div class="tradeoff"><strong>Trade-off:</strong> FAQ answers are keyword-matched snippets, not RAG. Paraphrased but not dynamically retrieved.</div>
+          <p class="why"><strong>Why:</strong> Refund IDs and order statuses come from <code style="font-family: var(--mono); font-size: 0.8rem;">ToolResult</code>, not from the model. Policy text is fixed; the LLM only rephrases it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: What We'd Do Differently -->
+    <section class="slide" data-slide="4">
+      <div class="slide-header">
+        <div class="slide-label">Production Roadmap</div>
+        <h2>If I had more time, I'd start with identity, not model quality</h2>
+      </div>
+      <div class="content">
+        <div class="priority-box">
+          <h3>#1 Priority: Authentication + order ownership verification</h3>
+          <p>
+            Today, anyone with an order ID can query status or initiate a refund. <code style="font-family: var(--mono);">customer_email</code> exists in mock data but is never checked. In production, the first job is confirming the caller can act on that order, not parsing their wording.
+          </p>
+          <p>
+            That enables tying <code style="font-family: var(--mono);">session_id</code> to a logged-in user, scoping tool calls to owned orders, and routing cases that need a human.
+          </p>
+        </div>
+        <div class="grid-3" style="margin-top: 1.5rem;">
+          <div class="card">
+            <h3>Persistence</h3>
+            <p>Redis or SQLite for sessions with TTL. Replace the JSON file store with real Bookly APIs and audit logging.</p>
+          </div>
+          <div class="card">
+            <h3>Evaluation</h3>
+            <p>Golden dataset of multi-turn conversations. Regression suite against the mock LLM, plus periodic live evals for routing quality.</p>
+          </div>
+          <div class="card">
+            <h3>Observability</h3>
+            <p>Structured tracing on intent distribution, clarification rate, and refund funnel. Metrics on confidence scores and escalation triggers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <div class="progress" id="progress"></div>
+    <span class="nav-hint">← → or click dots to navigate</span>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prev">Previous</button>
+      <button class="nav-btn" id="next">Next</button>
+    </div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll(".slide");
+    const progress = document.getElementById("progress");
+    let current = 0;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement("div");
+      dot.className = "dot" + (i === 0 ? " active" : "");
+      dot.addEventListener("click", () => goTo(i));
+      progress.appendChild(dot);
+    });
+
+    function goTo(index) {
+      if (index < 0 || index >= slides.length) return;
+      slides[current].classList.remove("active");
+      progress.children[current].classList.remove("active");
+      current = index;
+      slides[current].classList.add("active");
+      progress.children[current].classList.add("active");
+    }
+
+    document.getElementById("prev").addEventListener("click", () => goTo(current - 1));
+    document.getElementById("next").addEventListener("click", () => goTo(current + 1));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goTo(current + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); goTo(current - 1); }
+    });
+  </script>
+</body>
+</html>
